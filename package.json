@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chrome": "^0.1.0",
+    "chromedriver": "^87.0.2",
     "express": "^4.17.1"
   },
   "devDependencies": {
