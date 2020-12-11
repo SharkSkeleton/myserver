@@ -4,7 +4,7 @@ const app = express()
 const PORT = process.env.PORT || 80
 
 const fs = require('fs');
-const excel = require('excel4node');
+// const excel = require('excel4node');
 const request = require('request');
 const jsonParser = express.json();
 
@@ -38,7 +38,7 @@ let myArr = [];
 
 app.get('/', (req, res) => {
 
-    async function parse(workbook, worksheet) {
+    async function parse() {
         await driver.wait(until.elementLocated(By.css('.standart-view.clear-view.flex-colls#searchResults #preloader.hide')), 5 * 2000);
 
         const container = await driver.findElement(By.css('#searchResults'));
@@ -208,8 +208,8 @@ app.get('/', (req, res) => {
     }
 
     async function parseNPages() {
-        let workbook = new excel.Workbook();
-        let worksheet = workbook.addWorksheet('Main');
+        // let workbook = new excel.Workbook();
+        // let worksheet = workbook.addWorksheet('Main');
         sleep(3000);
         try {
             await driver.get(riaTargetUrl).then(() => {
@@ -224,7 +224,7 @@ app.get('/', (req, res) => {
             console.log(`last btn text: ${lastBtnText}`);
 
             for (let i = 0; i < N; i++) {
-                await parse(workbook, worksheet);
+                await parse();
 
                 if (i > 4) {
                     await driver.sleep(1000);
@@ -307,33 +307,33 @@ app.get('/', (req, res) => {
         response.json({"data": 'Some Error'});
     });
 
-    app.post("/postdatatosave", jsonParser, function (request, response) {
-        let workbook = new excel.Workbook();
-        let worksheet = workbook.addWorksheet('Main');
-        console.log('getDataFromServer')
-        // если не переданы данные, возвращаем ошибку
-        if(!request.body) return response.sendStatus(400);
-
-
-        // получаем данные
-
-        for (let i = 0; i < request.body.data.length; i++) {
-            worksheet.cell(i, 1).string(request.body.data[i].title);
-            worksheet.cell(i, 2).string(request.body.data[i].link);
-            worksheet.cell(i, 3).string(request.body.data[i].metro);
-            worksheet.cell(i, 4).string(request.body.data[i].priceUSD);
-            worksheet.cell(i, 5).string(request.body.data[i].priceUAH);
-            worksheet.cell(i, 6).string(request.body.data[i].rooms);
-            worksheet.cell(i, 7).string(request.body.data[i].squares);
-            worksheet.cell(i, 8).string(request.body.data[i].time);
-        }
-
-        workbook.write('myNewExcel.xlsx');
-        response.json({"message": "File created!"});
-
-        // отправка данных обратно клиенту
-        response.json({"message": 'Some Error'});
-    });
+    // app.post("/postdatatosave", jsonParser, function (request, response) {
+    //     let workbook = new excel.Workbook();
+    //     let worksheet = workbook.addWorksheet('Main');
+    //     console.log('getDataFromServer')
+    //     // если не переданы данные, возвращаем ошибку
+    //     if(!request.body) return response.sendStatus(400);
+    //
+    //
+    //     // получаем данные
+    //
+    //     for (let i = 0; i < request.body.data.length; i++) {
+    //         worksheet.cell(i, 1).string(request.body.data[i].title);
+    //         worksheet.cell(i, 2).string(request.body.data[i].link);
+    //         worksheet.cell(i, 3).string(request.body.data[i].metro);
+    //         worksheet.cell(i, 4).string(request.body.data[i].priceUSD);
+    //         worksheet.cell(i, 5).string(request.body.data[i].priceUAH);
+    //         worksheet.cell(i, 6).string(request.body.data[i].rooms);
+    //         worksheet.cell(i, 7).string(request.body.data[i].squares);
+    //         worksheet.cell(i, 8).string(request.body.data[i].time);
+    //     }
+    //
+    //     workbook.write('myNewExcel.xlsx');
+    //     response.json({"message": "File created!"});
+    //
+    //     // отправка данных обратно клиенту
+    //     response.json({"message": 'Some Error'});
+    // });
 
     console.log('here')
     app.listen(3000);
@@ -341,41 +341,41 @@ app.get('/', (req, res) => {
 
 app.get('/about', (req, res) => {
 
-    async function parse() {
-        await driver.get(riaTargetUrl);
-        // await driver.wait(until.elementLocated(By.css('.standart-view.clear-view.flex-colls#searchResults #preloader.hide')), 5 * 2000);
-
-        const container = await driver.findElement(By.css('.content'));
-        let elements = await container.findElements(By.css('.offer-wrapper'));
-
-        console.log('Elements count', elements.length);
-
-        while (elements.length < 20) {
-            await driver.sleep(500);
-            elements = await container.findElements(By.css('.space rel'));
-        }
-
-        for (let i = 0; i < elements.length; i++) {
-            let element = elements[i];
-            let apartment = {'title': '', 'link': '', 'price': ''}
-
-            // get title
-            try {
-                const link = await element.findElement(By.css('.lheight22.margintop5 a'));
-                apartment.title = await link.getText();
-                apartment.link = await link.getAttribute('href');
-
-                console.log('apartment', apartment);
-                res.send(apartment);
-            } catch (e) {
-                if (e.name === 'NoSuchElementError') { console.log('Unable to find a link tag under the apartment element!'); }
-                else { console.log(`Some error with parsing apartment link: ${e.message}`); }
-            }
-        }
-
-        await driver.quit();
-    }
-    parse();
+    // async function parse() {
+    //     await driver.get(riaTargetUrl);
+    //     // await driver.wait(until.elementLocated(By.css('.standart-view.clear-view.flex-colls#searchResults #preloader.hide')), 5 * 2000);
+    //
+    //     const container = await driver.findElement(By.css('.content'));
+    //     let elements = await container.findElements(By.css('.offer-wrapper'));
+    //
+    //     console.log('Elements count', elements.length);
+    //
+    //     while (elements.length < 20) {
+    //         await driver.sleep(500);
+    //         elements = await container.findElements(By.css('.space rel'));
+    //     }
+    //
+    //     for (let i = 0; i < elements.length; i++) {
+    //         let element = elements[i];
+    //         let apartment = {'title': '', 'link': '', 'price': ''}
+    //
+    //         // get title
+    //         try {
+    //             const link = await element.findElement(By.css('.lheight22.margintop5 a'));
+    //             apartment.title = await link.getText();
+    //             apartment.link = await link.getAttribute('href');
+    //
+    //             console.log('apartment', apartment);
+    //             res.send(apartment);
+    //         } catch (e) {
+    //             if (e.name === 'NoSuchElementError') { console.log('Unable to find a link tag under the apartment element!'); }
+    //             else { console.log(`Some error with parsing apartment link: ${e.message}`); }
+    //         }
+    //     }
+    //
+    //     await driver.quit();
+    // }
+    // parse();
 })
 
 app.get('/new', (req, res) => {
